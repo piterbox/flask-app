@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Post {% if mode == 'update' %} Update {% else %} Create {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="card mb-3">
+                <div class="card-header">
+                   <h3>Post {% if mode == 'update' %} Update {% else %} Create {% endif %}</h3>
+                </div>
+                <div class="card-body">
+
+                    <form action="{% if mode == 'create' %} {{ url_for('posts.post_create') }} {% else %} {{ url_for('posts.post_edit', slug=post.slug) }} {% endif %}" method="post" class="mt-10">
+
+                        {% for field in form %}
+
+                        <div class="form-group ">
+                            {{ field.label(class='control-label')}}
+
+                            {% if field.errors %}
+
+                            {{ field(class='form-control is-invalid') }}
+
+                            {% for error in field.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+
+                            {% else %}
+                            {{ field(class='form-control') }}
+                            {% endif %}
+                        </div>
+
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary float-right">
+                        {% if mode == 'update' %}
+                            Update
+                        {% else %}
+                            Save
+                        {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

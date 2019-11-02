@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Blog
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center mb-5 mt-5">
+            <h1>Latest Posts:</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if pages.total > 0 %}
+            {% for post in pages.items %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="text-right text-muted">{{ post.date_pub }}</div>
+                    <h3><a href="{{ url_for('posts.post_view', slug=post.slug)}}">{{ post.title}}</a></h3>
+                </div>
+                <div class="card-body">
+                    <p>{{ post.content }}</p>
+
+                </div>
+
+                <div class="card-footer text-right">
+                    <a href="{{ url_for('posts.post_view', slug=post.slug)}}" class="btn btn-primary">Read More...</a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h3>Post not found</h3>
+            {% endif %}
+        </div>
+    </div>
+    {% if pages.total > 0 %}
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item {% if not pages.has_prev %} disabled {% endif %}">
+                        <a class="page-link" href="./?page={{ pages.prev_num }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% for page in pages.iter_pages() %}
+
+                    {% if page == pages.page or page == pages.page - 1 or page == pages.page + 1  %}
+                    <li class="page-item {% if page == pages.page %} active {% endif %}">
+                        <a class="page-link" href="./?page={{ page }}">{{page}}</a>
+                    </li>
+                    {% endif %}
+
+                    {% endfor %}
+                   <li class="page-item {% if not pages.has_next %} disabled {% endif %}">
+                        <a class="page-link" href="./?page={{ pages.next_num }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
